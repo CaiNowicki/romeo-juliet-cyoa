@@ -98,8 +98,12 @@ def start_scene_select(player_character):
 def main_gameplay_loop(scene_id, player_character):
   game_over_flag = False
   while not game_over_flag:
-    player_choice = show_scene(scene_id, player_character)
-    game_over_flag, scene_id = apply_choice(player_choice, scene_id, player_character)
+    try:
+      player_choice = show_scene(scene_id, player_character)
+      game_over_flag, scene_id = apply_choice(player_choice, scene_id, player_character)
+    except KeyError:
+      print("Sorry, that scene isn't written yet.")
+      end_game()
   # add logic here to check ENDINGS for the player_choice & scene_id combo
   print("Sorry, that ends the game!")
   end_game()
@@ -121,7 +125,7 @@ def show_scene(scene_id, player_character):
   print(scene_data["text"])
   choices = scene_data['choices']
   for i, choice in enumerate(choices, start=1):
-    print(f"{i}. {choice}")
+    print(f"{i}. {choice["text"]}")
   user_choice = get_int_choice(len(choices))
   return user_choice
 
