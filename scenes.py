@@ -10,7 +10,7 @@ SCENES = {
                 },
                 {
                     "text": "Refuse outright: *'I will not marry yet.'*",
-                    "next": "juliet_rebellion"   # Triggers family conflict
+                    "next": "capulet_ball_prep"   # Triggers family conflict
                 }
             ]
         }
@@ -23,7 +23,7 @@ SCENES = {
             "choices": [
                 {
                     "text": "Go to the ball (what’s the worst that could happen?).",
-                    "next": "capulet_ball_entry"
+                    "next": "capulet_ball"
                 },
                 {
                     "text": "Storm off alone. *'Love is a smoke raised with the fume of sighs.'*",
@@ -40,7 +40,7 @@ SCENES = {
             "choices": [
                 {
                     "text": "Goad Romeo into attending the ball.",
-                    "next": "capulet_ball_entry"
+                    "next": "capulet_ball"
                 },
                 {
                     "text": "Ditch Romeo. Seek trouble with Tybalt instead.",
@@ -61,7 +61,7 @@ SCENES = {
                 },
                 {
                     "text": "Hold back—for now. *'I will withdraw, but this intrusion shall / Now seem sweet, convert to bitterest gall.'*",
-                    "next": "capulet_ball_cautious"  # Attends ball, watches Romeo
+                    "next": "capulet_ball"  # Attends ball, watches Romeo
                 }
             ]
         }
@@ -74,7 +74,7 @@ SCENES = {
             "choices": [
                 {
                     "text": "Insist: *'She’s old enough. Let me woo her tonight at the ball.'*",
-                    "next": "capulet_ball_pursuit"
+                    "next": "capulet_ball"
                 },
                 {
                     "text": "Withdraw gracefully. *'I’ll wait—but time is fleeting.'*",
@@ -89,15 +89,15 @@ SCENES = {
         1: {  # Juliet
             "text": "The Nurse fussing over your gown is suffocating. *'Wear this, no, this!’* You catch your reflection—a stranger. Do you play the part or rebel?",
             "choices": [
-                {"text": "Submit. Let them dress you for Paris.", "next": "ball_paris_focus"},
-                {"text": "Sneak a dagger into your sleeve.", "next": "ball_juliet_defiant"}
+                {"text": "Submit. Let them dress you for Paris.", "next": "capulet_ball"},
+                {"text": "Sneak a dagger into your sleeve.", "next": "capulet_ball"}
             ]
         },
         2: {  # Romeo
             "text": "The Capulet hall buzzes with laughter. Masked, you scan the crowd—then see *her*. Juliet, radiant. But Tybalt’s glare burns from across the room.",
             "choices": [
-                {"text": "Approach Juliet.", "next": "first_kiss"},
-                {"text": "Avoid her. This is madness.", "next": "romeo_retreat"}
+                {"text": "Approach Juliet.", "next": "capulet_ball"},
+                {"text": "Avoid her. This is madness.", "next": "capulet_ball"}
             ]
         }
     },

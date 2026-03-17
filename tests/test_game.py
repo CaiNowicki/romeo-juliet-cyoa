@@ -1,3 +1,22 @@
+"""Instructor-level overview:
+
+These tests focus on the game loop's decision logic, the IO boundaries, and save/load
+behavior. The game is intentionally written with injectable input/output functions,
+so tests can simulate user choices and capture printed text without touching real
+stdin/stdout. This keeps tests deterministic and fast.
+
+We choose these tests because they cover:
+1) Branching logic (END vs. next scene).
+2) Content resolution (placeholder text hooks).
+3) Input validation and reprompting.
+4) Scene display behavior and resolver usage.
+5) Menu and start-scene selection flow.
+6) Save/load correctness and error handling.
+"""
+
+import json
+import os
+import tempfile
 import unittest
 
 import content
@@ -6,8 +25,10 @@ from player import PlayerCharacter
 
 
 class TestGame(unittest.TestCase):
+  # Each test uses small, in-memory scene dictionaries or temp directories
+  # to isolate behavior and avoid dependencies on the real scene file.
   def test_apply_choice_end(self):
-    # Minimal scene data for an "END" terminal choice.
+    # Verify END choices stop the game and keep the current scene id.
     scenes = {
       "scene1": {
         1: {
@@ -16,15 +37,14 @@ class TestGame(unittest.TestCase):
         }
       }
     }
-    # Use a real PlayerCharacter to exercise id-based lookups.
+    # Use a real PlayerCharacter to exercise id-based scene lookups.
     player_character = PlayerCharacter(1, "Juliet")
-    # Choosing option 1 should end the game and keep the same scene id.
     game_over, next_scene = main.apply_choice(1, "scene1", player_character, scenes)
     self.assertTrue(game_over)
     self.assertEqual(next_scene, "scene1")
 
   def test_apply_choice_next(self):
-    # Minimal scene data for a non-terminal transition.
+    # Verify non-END choices advance to a new scene and continue play.
     scenes = {
       "scene1": {
         1: {
@@ -33,15 +53,15 @@ class TestGame(unittest.TestCase):
         }
       }
     }
-    # Use a real PlayerCharacter to exercise id-based lookups.
+    # Use a real PlayerCharacter to exercise id-based scene lookups.
     player_character = PlayerCharacter(1, "Juliet")
-    # Choosing option 1 should advance to a new scene without ending the game.
     game_over, next_scene = main.apply_choice(1, "scene1", player_character, scenes)
     self.assertFalse(game_over)
     self.assertEqual(next_scene, "scene2")
 
   def test_resolve_scene_text_placeholder(self):
-    # Missing "text" should fall back to a placeholder that includes scene + player id.
+    # If a scene has no text, the resolver should produce a placeholder
+    # that mentions the scene id and player id to aid content writing.
     scene_data = {"choices": []}
     player_character = PlayerCharacter(2, "Romeo")
     text = content.resolve_scene_text("missing_scene", player_character, scene_data)
@@ -49,12 +69,13 @@ class TestGame(unittest.TestCase):
     self.assertIn("player=2", text)
 
   def test_get_int_choice_reprompts(self):
-    # Feed invalid input, then out-of-range, then a valid choice.
+    # Simulate invalid input, out-of-range input, then a valid choice.
+    # This demonstrates reprompting and input validation behavior.
     inputs = iter(["x", "3", "2"])
     outputs = []
 
     def input_func():
-      # Simulate user input without touching stdin.
+      # Simulate user input without touching real stdin.
       return next(inputs)
 
     def output_func(message):
@@ -66,7 +87,8 @@ class TestGame(unittest.TestCase):
     self.assertTrue(any("Please enter a number between 1 and 2" in msg for msg in outputs))
 
   def test_show_scene_uses_resolver(self):
-    # Provide empty text to force content resolution.
+    # Provide empty text to force content resolution, then ensure the
+    # resolver's output is printed instead of raw scene data.
     scenes = {
       "scene1": {
         1: {
@@ -95,7 +117,8 @@ class TestGame(unittest.TestCase):
     self.assertEqual(outputs[0], "RESOLVED")
 
   def test_new_game_flow_return_to_menu(self):
-    # Track whether main_gameplay_loop is invoked.
+    # Verify that choosing "Return to main menu" stops the new game flow
+    # and does not call the gameplay loop.
     calls = {"called": False}
 
     def input_func():
@@ -128,6 +151,107 @@ class TestGame(unittest.TestCase):
     start_scenes = {3: "scene_start"}
     scene_id = main.start_scene_select(player_character, start_scenes)
     self.assertEqual(scene_id, "scene_start")
+
+  def test_save_game_writes_file(self):
+    # Save to a temporary directory with a provided filename, then
+    # assert the file contents match the expected schema.
+    with tempfile.TemporaryDirectory() as temp_dir:
+      player_character = PlayerCharacter(1, "Juliet")
+      save_file = main.save_game(
+        player_character,
+        "juliet_intro",
+        input_func=lambda: "ignored",
+        output_func=lambda message: None,
+        save_dir=temp_dir,
+        filename="slot1",
+      )
+      self.assertIsNotNone(save_file)
+      self.assertTrue(os.path.exists(save_file))
+      with open(save_file, "r", encoding="utf-8") as handle:
+        data = json.load(handle)
+      self.assertEqual(data["current_scene"], "juliet_intro")
+      self.assertEqual(data["player"]["character_id"], 1)
+      self.assertEqual(data["player"]["name"], "Juliet")
+
+  def test_save_game_cancelled_on_blank_name(self):
+    # Blank filename should cancel the save and return None.
+    with tempfile.TemporaryDirectory() as temp_dir:
+      player_character = PlayerCharacter(1, "Juliet")
+      result = main.save_game(
+        player_character,
+        "juliet_intro",
+        input_func=lambda: "   ",
+        output_func=lambda message: None,
+        save_dir=temp_dir,
+      )
+      self.assertIsNone(result)
+
+  def test_load_game_reads_file(self):
+    # Load a known save file from a temporary directory and verify
+    # the PlayerCharacter and current scene are reconstructed.
+    with tempfile.TemporaryDirectory() as temp_dir:
+      data = {
+        "current_scene": "romeo_melancholy",
+        "player": {
+          "character_id": 2,
+          "name": "Romeo",
+          "flags": {"met_juliet": True},
+        },
+      }
+      save_path = os.path.join(temp_dir, "slot1.json")
+      with open(save_path, "w", encoding="utf-8") as handle:
+        json.dump(data, handle)
+
+      player_character, current_scene = main.load_game(
+        input_func=lambda: "1",
+        output_func=lambda message: None,
+        save_dir=temp_dir,
+      )
+      self.assertEqual(current_scene, "romeo_melancholy")
+      self.assertEqual(player_character.character_id, 2)
+      self.assertEqual(player_character.name, "Romeo")
+      self.assertTrue(player_character.flags["met_juliet"])
+
+  def test_load_game_no_saves(self):
+    # Missing or empty saves directory should return None (no crash).
+    with tempfile.TemporaryDirectory() as temp_dir:
+      result = main.load_game(
+        input_func=lambda: "1",
+        output_func=lambda message: None,
+        save_dir=os.path.join(temp_dir, "missing"),
+      )
+      self.assertIsNone(result)
+
+      result = main.load_game(
+        input_func=lambda: "1",
+        output_func=lambda message: None,
+        save_dir=temp_dir,
+      )
+      self.assertIsNone(result)
+
+  def test_load_game_invalid_save(self):
+    # Invalid saves should return None and not crash.
+    with tempfile.TemporaryDirectory() as temp_dir:
+      save_path = os.path.join(temp_dir, "slot1.json")
+      with open(save_path, "w", encoding="utf-8") as handle:
+        handle.write("{ not valid json")
+
+      result = main.load_game(
+        input_func=lambda: "1",
+        output_func=lambda message: None,
+        save_dir=temp_dir,
+      )
+      self.assertIsNone(result)
+
+  def test_is_valid_save_missing_fields(self):
+    # Missing required keys or wrong types should fail validation.
+    self.assertFalse(main._is_valid_save(None))
+    self.assertFalse(main._is_valid_save({}))
+    self.assertFalse(main._is_valid_save({"player": {}}))
+    self.assertFalse(main._is_valid_save({"current_scene": "x"}))
+    self.assertFalse(main._is_valid_save({"player": "nope", "current_scene": "x"}))
+    self.assertFalse(main._is_valid_save({"player": {"character_id": 1}, "current_scene": "x"}))
+    self.assertFalse(main._is_valid_save({"player": {"name": "Juliet"}, "current_scene": "x"}))
 
 
 if __name__ == "__main__":

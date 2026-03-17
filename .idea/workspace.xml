@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83e74e4b-159b-4017-90c5-edd8db090108" name="Changes" comment="created PlayerCharacter dataclass to store logic, and added unit tests">
+    <list default="true" id="83e74e4b-159b-4017-90c5-edd8db090108" name="Changes" comment="added new story content">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scenes.py" beforeDir="false" afterPath="$PROJECT_DIR$/scenes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_game.py" afterDir="false" />
     </list>
@@ -218,7 +220,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773745828025</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added new story content">
+      <option name="closed" value="true" />
+      <created>1773746777032</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1773746777032</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -238,6 +248,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Updated assignment to show &quot;excellent&quot; for Assignment 2" />
     <MESSAGE value="created PlayerCharacter dataclass to store logic, and added unit tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="created PlayerCharacter dataclass to store logic, and added unit tests" />
+    <MESSAGE value="added new story content" />
+    <option name="LAST_COMMIT_MESSAGE" value="added new story content" />
   </component>
 </project>
