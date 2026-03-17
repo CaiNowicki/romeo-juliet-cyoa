@@ -28,7 +28,7 @@ class TestGame(unittest.TestCase):
   # Each test uses small, in-memory scene dictionaries or temp directories
   # to isolate behavior and avoid dependencies on the real scene file.
   def test_apply_choice_end(self):
-    # Verify END choices stop the game and keep the current scene id.
+    # Verify END choices stop the game and move to the END scene id.
     scenes = {
       "scene1": {
         1: {
@@ -41,7 +41,7 @@ class TestGame(unittest.TestCase):
     player_character = PlayerCharacter(1, "Juliet")
     game_over, next_scene = main.apply_choice(1, "scene1", player_character, scenes)
     self.assertTrue(game_over)
-    self.assertEqual(next_scene, "scene1")
+    self.assertEqual(next_scene, "END")
 
   def test_apply_choice_next(self):
     # Verify non-END choices advance to a new scene and continue play.
@@ -267,6 +267,91 @@ class TestGame(unittest.TestCase):
     self.assertFalse(main._is_valid_save({"player": "nope", "current_scene": "x"}))
     self.assertFalse(main._is_valid_save({"player": {"character_id": 1}, "current_scene": "x"}))
     self.assertFalse(main._is_valid_save({"player": {"name": "Juliet"}, "current_scene": "x"}))
+
+  def test_show_ending_uses_random_variant(self):
+    # Ensure show_ending prints the randomly selected ending text and waits for exit.
+    outputs = []
+
+    def output_func(message):
+      outputs.append(message)
+
+    def input_func():
+      return "1"
+
+    def fake_choice(items):
+      return items[0]
+
+    original_choice = main.random.choice
+    try:
+      main.random.choice = fake_choice
+      main.show_ending(
+        input_func,
+        output_func,
+        scenes={
+          "END": {
+            1: {"text": "Ending one.", "choices": []},
+            2: {"text": "Ending two.", "choices": []},
+          }
+        },
+      )
+    finally:
+      main.random.choice = original_choice
+
+    self.assertTrue(any(msg == "Ending one." for msg in outputs))
+
+  def test_show_ending_fallback_when_missing(self):
+    # If no END variants exist, show a generic ending message.
+    outputs = []
+
+    def output_func(message):
+      outputs.append(message)
+
+    main.show_ending(
+      input_func=lambda: "1",
+      output_func=output_func,
+      scenes={"END": {}},
+    )
+
+    self.assertTrue(any("Sorry, that ends the game!" in msg for msg in outputs))
+
+  def test_main_gameplay_loop_calls_show_ending(self):
+    # Full-loop test: reaching END should trigger show_ending before exit.
+    calls = {"ending_called": False}
+
+    def fake_show_ending(input_func, output_func, scenes=main.SCENES):
+      calls["ending_called"] = True
+
+    def fake_end_game(output_func=print, exit_func=print):
+      # Replace hard exit with a no-op for testing.
+      pass
+
+    def fake_show_scene(scene_id, player_character, input_func=input, output_func=print, scenes=main.SCENES, content_resolver=None):
+      # Always return the first choice.
+      return 1
+
+    def fake_apply_choice(player_choice, scene_id, player_character, scenes=main.SCENES):
+      # Force the loop to end by returning END.
+      return True, "END"
+
+    player_character = PlayerCharacter(1, "Juliet")
+
+    original_show_ending = main.show_ending
+    original_end_game = main.end_game
+    original_show_scene = main.show_scene
+    original_apply_choice = main.apply_choice
+    try:
+      main.show_ending = fake_show_ending
+      main.end_game = fake_end_game
+      main.show_scene = fake_show_scene
+      main.apply_choice = fake_apply_choice
+      main.main_gameplay_loop("start", player_character, input_func=lambda: "1", output_func=lambda message: None)
+    finally:
+      main.show_ending = original_show_ending
+      main.end_game = original_end_game
+      main.show_scene = original_show_scene
+      main.apply_choice = original_apply_choice
+
+    self.assertTrue(calls["ending_called"])
 
 
 if __name__ == "__main__":

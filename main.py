@@ -6,6 +6,7 @@ to swap the UI later (GUI/web) without rewriting core logic.
 """
 
 import json
+import random
 import sys
 from pathlib import Path
 
@@ -202,8 +203,8 @@ def main_gameplay_loop(scene_id, player_character, input_func=input, output_func
     except KeyError:
       output_func("Sorry, that scene isn't written yet.")
       end_game(output_func)
-  # add logic here to check ENDINGS for the player_choice & scene_id combo
-  output_func("Sorry, that ends the game!")
+  # Show a randomized ending scene before exiting.
+  show_ending(input_func, output_func)
   end_game(output_func)
 
 def apply_choice(player_choice, scene_id, player_character, scenes=SCENES):
@@ -213,7 +214,7 @@ def apply_choice(player_choice, scene_id, player_character, scenes=SCENES):
   # return new scene and set game_over_flag to T/F as appropriate
   choice = scenes[scene_id][player_character.character_id]["choices"][player_choice - 1]
   if choice["next"] == "END":
-    return True, scene_id
+    return True, "END"
   return False, choice["next"]
 
 
@@ -230,6 +231,17 @@ def show_scene(scene_id, player_character, input_func=input, output_func=print, 
   if user_choice == len(choices) + 1:
     return SAVE_AND_EXIT
   return user_choice
+
+def show_ending(input_func=input, output_func=print, scenes=SCENES):
+  """ show a random ending scene and wait for a final acknowledgement """
+  end_variants = scenes.get("END", {})
+  if not end_variants:
+    output_func("Sorry, that ends the game!")
+    return
+  ending_scene = random.choice(list(end_variants.values()))
+  output_func(ending_scene.get("text", "Sorry, that ends the game!"))
+  output_func("1. Exit")
+  get_int_choice(1, input_func, output_func)
 
 def end_game(output_func=print, exit_func=sys.exit):
   """ this function ends the game """
