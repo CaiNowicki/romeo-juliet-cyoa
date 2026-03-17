@@ -1,0 +1,19 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>def main():\r\n    # this is the main function of the program\r\n    # everything runs from here\r\n    print(\"Romeo & Juliet: A Choose-Your-Own-Adventure\")\r\n    print(\"This game will allow players to make choices that affect how the story unfolds.\")\r\n    print(\"Future versions will include branching paths, tracked decisions, and multiple endings.\")\r\n\r\n# Example variable assignments with explanation for data types\r\nsave_file_exists = False  # is there a save file? true/false answers can be booleans\r\n# TODO: add save_file_check functionality to return true/false on the existence of a save file\r\n\r\nromeo = dict()  # creating a variable to hold Romeo's status\r\n# dictionary is like a table of key:value pairs.\r\njuliet = dict()\r\n# TODO: add characteristics as keys to character dictionaries\r\n\r\nlove_score = 0  # integer value representing how much Romeo and Juliet love each other\r\n# initialized at 0 for a new game because they don't know each other yet\r\n\r\nromeo_inventory = [\"mask\"]\r\njuliet_inventory = []\r\n# list variable for character inventories\r\n# list of strings stores items as string value for each character\r\n\r\n\r\n# Example of pseudocode conditional\r\n# Hint: press ctrl+/ to comment or uncomment a block of code/pseudocode after it is written\r\n# it may look more-or-less like code but won't run (yet)\r\n# def(win_state)\r\n# \"\"\" this function determines the win state of the game and runs the end_game function with the correct state \"\"\"\r\n# if romeo[\"has_dagger\"] = true AND juliet[\"drank_poison\"] = true:\r\n#     print Romeo stabbed himself. Juliet is dead.\r\n#     game_over(lose)\r\n#\r\n# else if juliet[\"drank_poison\"] = false:\r\n#   if love_score > 90:\r\n#     print They kiss! They get married and run away together to live happily ever after!\r\n#     game_over(win)\r\n# TODO: create game_over function to mark save file as complete and close program\r\n\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    # this function calls the main function when the script is run\r\n    # this will work with whatever name you give the function\r\n    main()\r\n\r\n# also acceptable to skip function definitions, but the \"main guard\" is considered best practice\r\n\r\n# See PyCharm help at https://www.jetbrains.com/help/pycharm/\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 4e5f6bf9341858f9aeffb056d8b0f217fa1799ca)
++++ b/main.py	(date 1768959682371)
+@@ -27,7 +27,7 @@
+ # Hint: press ctrl+/ to comment or uncomment a block of code/pseudocode after it is written
+ # it may look more-or-less like code but won't run (yet)
+ # def(win_state)
+-# """ this function determines the win state of the game and runs the end_game function with the correct state """
++# """ this function determines the win state of the game and runs the gane_over function with the correct state """
+ # if romeo["has_dagger"] = true AND juliet["drank_poison"] = true:
+ #     print Romeo stabbed himself. Juliet is dead.
+ #     game_over(lose)

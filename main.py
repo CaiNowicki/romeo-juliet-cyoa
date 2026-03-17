@@ -1,22 +1,24 @@
 import sys
 from scenes import SCENES, START_SCENES
+from content import resolve_scene_text
+from player import PlayerCharacter
 
-def main():
+def main(input_func=input, output_func=print):
   # this is the main function of the program
   # everything runs from here
   # print title and intro
-  title()
+  title(output_func)
   # display main menu
-  main_menu_loop()
+  main_menu_loop(input_func, output_func)
   # run main gameplay loop
 
 
-def title():
-  print("Romeo & Juliet: A Choose-Your-Own-Adventure")
-  print("Welcome to Romeo & Juliet like you've never seen it before!")
-  print("This game will allow players to make choices that affect how the story unfolds.")
-  print("Future versions will include branching paths, tracked decisions, and multiple endings.")
-  print("You can start a new game or load a saved game")
+def title(output_func=print):
+  output_func("Romeo & Juliet: A Choose-Your-Own-Adventure")
+  output_func("Welcome to Romeo & Juliet like you've never seen it before!")
+  output_func("This game will allow players to make choices that affect how the story unfolds.")
+  output_func("Future versions will include branching paths, tracked decisions, and multiple endings.")
+  output_func("You can start a new game or load a saved game")
 
 def load_game():
   """ loads the game from the game folder """
@@ -32,107 +34,116 @@ def save_game():
   # saves file locally
   pass
 
-def main_menu_loop():
+def main_menu_loop(input_func=input, output_func=print):
   """ main menu """
   while True:
-    print("1. New game")
-    print("2. Load a saved game")
-    print("3. Exit")
-    choice = get_int_choice(3)
+    output_func("1. New game")
+    output_func("2. Load a saved game")
+    output_func("3. Exit")
+    choice = get_int_choice(3, input_func, output_func)
     match choice:
       case 1:
-        new_game_flow()
+        new_game_flow(input_func, output_func)
       case 2:
-        load_game_flow()
+        load_game_flow(input_func, output_func)
       case 3:
-        end_game()
+        end_game(output_func)
 
-def get_int_choice(limit):
+def get_int_choice(limit, input_func=input, output_func=print):
   """ this function gets the user choice and ensures it is a valid integer selection"""
   while True:
-    print("What do you choose?")
+    output_func("What do you choose?")
     try:
-      choice = int(input())
+      choice = int(input_func())
       if 0 < choice <= limit:
         return choice
       else:
-        print(f"Please enter a number between 1 and {limit}")
+        output_func(f"Please enter a number between 1 and {limit}")
         continue
     except ValueError:
-      print(f"Please enter a number between 1 and {limit}.")
+      output_func(f"Please enter a number between 1 and {limit}.")
       continue
 
 
-
-
-def new_game_flow():
+def new_game_flow(input_func=input, output_func=print):
   """ this function creates a new game """
-  player_character = character_select_menu()
+  player_character = character_select_menu(input_func, output_func)
+  if player_character is None:
+    return
   # player character determines starting scene
   current_scene = start_scene_select(player_character)
-  main_gameplay_loop(current_scene, player_character)
+  main_gameplay_loop(current_scene, player_character, input_func, output_func)
 
-def load_game_flow():
+def load_game_flow(input_func=input, output_func=print):
   """ once game is loaded, function runs game from current state """
   # player_character = loaded_file.player_character
   # current_scene = loaded_file.current_scene
   # main_gameplay_loop(current_scene, player_character)
   pass
 
-def character_select_menu():
+def character_select_menu(input_func=input, output_func=print):
   """ player character selection menu """
-  print("Please choose a character:")
-  print("1. Juliet")
-  print("2. Romeo")
-  print("3. Mercutio")
-  print("4. Tybalt")
-  print("5. Paris")
-  print("6. Return to main menu")
-  choice = get_int_choice(6)
-  return choice
+  output_func("Please choose a character:")
+  output_func("1. Juliet")
+  output_func("2. Romeo")
+  output_func("3. Mercutio")
+  output_func("4. Tybalt")
+  output_func("5. Paris")
+  output_func("6. Return to main menu")
+  choice = get_int_choice(6, input_func, output_func)
+  if choice == 6:
+    return None
+  character_names = {
+    1: "Juliet",
+    2: "Romeo",
+    3: "Mercutio",
+    4: "Tybalt",
+    5: "Paris",
+  }
+  return PlayerCharacter(choice, character_names[choice])
 
-def start_scene_select(player_character):
+def start_scene_select(player_character, start_scenes=START_SCENES):
   # select the first scene based on player character choice
-  return START_SCENES[player_character]
+  return start_scenes[player_character.character_id]
 
-def main_gameplay_loop(scene_id, player_character):
+def main_gameplay_loop(scene_id, player_character, input_func=input, output_func=print):
   game_over_flag = False
   while not game_over_flag:
     try:
-      player_choice = show_scene(scene_id, player_character)
+      player_choice = show_scene(scene_id, player_character, input_func, output_func)
       game_over_flag, scene_id = apply_choice(player_choice, scene_id, player_character)
     except KeyError:
-      print("Sorry, that scene isn't written yet.")
-      end_game()
+      output_func("Sorry, that scene isn't written yet.")
+      end_game(output_func)
   # add logic here to check ENDINGS for the player_choice & scene_id combo
-  print("Sorry, that ends the game!")
-  end_game()
+  output_func("Sorry, that ends the game!")
+  end_game(output_func)
 
-def apply_choice(player_choice, scene_id, player_character):
+def apply_choice(player_choice, scene_id, player_character, scenes=SCENES):
   """ this function contains the logic for applying the player choices to the game state """
   # take in player choice and specific scene
   # determine where choice takes player next
   # return new scene and set game_over_flag to T/F as appropriate
-  choice = SCENES[scene_id][player_character]["choices"][player_choice-1]
+  choice = scenes[scene_id][player_character.character_id]["choices"][player_choice - 1]
   if choice["next"] == "END":
     return True, scene_id
   return False, choice["next"]
 
 
-def show_scene(scene_id, player_character):
+def show_scene(scene_id, player_character, input_func=input, output_func=print, scenes=SCENES, content_resolver=resolve_scene_text):
   """ this function fetches the appropriate scene from the resources file and gets the user choice for the next scene """
-  scene_data = SCENES[scene_id][player_character]
-  print(scene_data["text"])
+  scene_data = scenes[scene_id][player_character.character_id]
+  output_func(content_resolver(scene_id, player_character, scene_data))
   choices = scene_data['choices']
   for i, choice in enumerate(choices, start=1):
-    print(f"{i}. {choice["text"]}")
-  user_choice = get_int_choice(len(choices))
+    output_func(f"{i}. {choice['text']}")
+  user_choice = get_int_choice(len(choices), input_func, output_func)
   return user_choice
 
-def end_game():
+def end_game(output_func=print, exit_func=sys.exit):
   """ this function ends the game """
-  print("See you next time!")
-  sys.exit()
+  output_func("See you next time!")
+  exit_func()
 
 
 if __name__ == "__main__":
