@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83e74e4b-159b-4017-90c5-edd8db090108" name="Changes" comment="updated PlayerClass object">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="83e74e4b-159b-4017-90c5-edd8db090108" name="Changes" comment="added new scene stubs and ending functionality, plus testing for new functions">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scenes.py" beforeDir="false" afterPath="$PROJECT_DIR$/scenes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_game.py" afterDir="false" />
     </list>
@@ -38,6 +38,9 @@
     &quot;accountId&quot;: &quot;22e43143-6d2c-427f-bde9-37f449f7c847&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/scripts/story_walk.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -55,6 +58,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.main.executor": "Run",
     "Python.scenes.executor": "Run",
+    "Python.story_walk.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -63,11 +67,16 @@
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/caino/PycharmProjects/romeo-juliet-cyoa",
+    "last_opened_file_path": "C:/Users/caino/PycharmProjects/romeo-juliet-cyoa/scripts",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\caino\PycharmProjects\romeo-juliet-cyoa\scripts" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="romeo-juliet-cyoa" />
@@ -244,7 +253,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773750288204</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="added new scene stubs and ending functionality, plus testing for new functions">
+      <option name="closed" value="true" />
+      <created>1773752472406</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1773752472406</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -267,6 +284,7 @@
     <MESSAGE value="added new story content" />
     <MESSAGE value="added comments throughout to explain code" />
     <MESSAGE value="updated PlayerClass object" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated PlayerClass object" />
+    <MESSAGE value="added new scene stubs and ending functionality, plus testing for new functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="added new scene stubs and ending functionality, plus testing for new functions" />
   </component>
 </project>

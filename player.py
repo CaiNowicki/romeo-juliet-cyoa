@@ -16,6 +16,8 @@ class PlayerCharacter:
   character_id: int
   # Display name used in saves or UI text.
   name: str
+  # Optional player-provided name for save files.
+  save_name: str | None = None
   # Flexible flags for tracking decisions or conditions in the story.
   # Use default_factory to avoid shared mutable defaults across instances.
   flags: dict[str, bool] = field(default_factory=dict)
@@ -66,6 +68,7 @@ class PlayerCharacter:
     return {
       "character_id": self.character_id,
       "name": self.name,
+      "save_name": self.save_name,
       "flags": self.flags,
       "inventory": self.inventory,
       "relationships": self.relationships,
@@ -80,6 +83,7 @@ class PlayerCharacter:
     return cls(
       data["character_id"],
       data["name"],
+      data.get("save_name"),
       data.get("flags", {}),
       data.get("inventory", []),
       data.get("relationships", {}),

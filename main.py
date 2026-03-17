@@ -84,6 +84,8 @@ def save_game(player_character, current_scene, input_func=input, output_func=pri
   # Convert current state into a JSON file on disk.
   save_path = Path(save_dir)
   save_path.mkdir(parents=True, exist_ok=True)
+  if not filename and player_character.save_name:
+    filename = player_character.save_name
   if not filename:
     output_func("Enter a name for your save:")
     filename = input_func().strip()
@@ -146,8 +148,16 @@ def new_game_flow(input_func=input, output_func=print):
   player_character = character_select_menu(input_func, output_func)
   if player_character is None:
     return
+  output_func("Name your save file:")
+  while True:
+    save_name = input_func().strip()
+    if save_name:
+      break
+    output_func("Please enter a non-empty name.")
+  player_character.save_name = save_name
   # Player character determines starting scene.
   current_scene = start_scene_select(player_character)
+  save_game(player_character, current_scene, input_func, output_func, filename=save_name)
   main_gameplay_loop(current_scene, player_character, input_func, output_func)
 
 def load_game_flow(input_func=input, output_func=print):
@@ -200,6 +210,7 @@ def main_gameplay_loop(scene_id, player_character, input_func=input, output_func
       # Store a running history of choices for replay/debugging.
       player_character.record_choice(scene_id, player_choice)
       game_over_flag, scene_id = apply_choice(player_choice, scene_id, player_character)
+      autosave(player_character, scene_id, output_func=output_func)
     except KeyError:
       output_func("Sorry, that scene isn't written yet.")
       end_game(output_func)
@@ -242,6 +253,12 @@ def show_ending(input_func=input, output_func=print, scenes=SCENES):
   output_func(ending_scene.get("text", "Sorry, that ends the game!"))
   output_func("1. Exit")
   get_int_choice(1, input_func, output_func)
+
+def autosave(player_character, current_scene, output_func=print):
+  if not player_character.save_name:
+    return
+  autosave_name = f"{player_character.save_name}_autosave"
+  save_game(player_character, current_scene, output_func=output_func, filename=autosave_name)
 
 def end_game(output_func=print, exit_func=sys.exit):
   """ this function ends the game """

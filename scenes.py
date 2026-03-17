@@ -64,6 +64,12 @@ SCENES = {
                     "next": "capulet_ball"  # Attends ball, watches Romeo
                 }
             ]
+        },
+        3: {
+            "text": "[TODO] Mercutio stumbles into Tybalt’s fury.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -354,6 +360,12 @@ SCENES = {
                 {"text": "Insult his house (no blades).", "next": "tybalt_fury"},
                 {"text": "Laugh and walk away.", "next": "capulet_ball"}
             ]
+        },
+        2: {
+            "text": "[TODO] Romeo watches Mercutio provoke Tybalt.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -389,6 +401,18 @@ SCENES = {
             "choices": [
                 {"text": "Flee to Mantua.", "next": "END"},
                 {"text": "Hide in the monastery.", "next": "friar_laurence_help"}
+            ]
+        },
+        1: {
+            "text": "[TODO] Juliet learns Romeo is banished.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
+        },
+        4: {
+            "text": "[TODO] Tybalt reacts to Romeo’s banishment.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
             ]
         }
     },
@@ -463,6 +487,12 @@ SCENES = {
                 {"text": "Demand an apology.", "next": "ball_paris_confronts_romeo"},
                 {"text": "Storm out.", "next": "END"}
             ]
+        },
+        1: {
+            "text": "[TODO] Juliet reacts to Paris’s humiliation.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -528,6 +558,12 @@ SCENES = {
                 {"text": "Apologize (humiliated).", "next": "capulet_ball"},
                 {"text": "Challenge Tybalt.", "next": "street_brawl"}
             ]
+        },
+        1: {
+            "text": "[TODO] Juliet reacts to the slap.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -539,6 +575,12 @@ SCENES = {
                 {"text": "Keep dancing (chaos is fun).", "next": "capulet_ball"},
                 {"text": "Trip Tybalt.", "next": "ball_tybalt_duel"}
             ]
+        },
+        2: {
+            "text": "[TODO] Romeo slips by while Mercutio distracts Tybalt.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -549,6 +591,12 @@ SCENES = {
             "choices": [
                 {"text": "Obey (grudgingly).", "next": "capulet_ball"},
                 {"text": "Strike anyway.", "next": "romeo_banished"}
+            ]
+        },
+        3: {
+            "text": "[TODO] Mercutio watches the duel escalate.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
             ]
         }
     },
@@ -572,6 +620,12 @@ SCENES = {
                 {"text": "Thank Tybalt (but ignore him).", "next": "balcony_soliloquy"},
                 {"text": "Tell the Nurse.", "next": "ball_nurse_warns"}
             ]
+        },
+        4: {
+            "text": "[TODO] Tybalt warns Juliet (Tybalt perspective).",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -583,6 +637,12 @@ SCENES = {
                 {"text": "Stagger to the balcony.", "next": "balcony_eavesdrop"},
                 {"text": "Collapse dramatically.", "next": "ball_mercutio_rosaline"}
             ]
+        },
+        3: {
+            "text": "[TODO] Mercutio watches Romeo sway (drugged).",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -593,6 +653,12 @@ SCENES = {
             "choices": [
                 {"text": "Flirt harder.", "next": "capulet_ball"},
                 {"text": "Abandon the game (Romeo needs help).", "next": "balcony_eavesdrop"}
+            ]
+        },
+        2: {
+            "text": "[TODO] Romeo reacts to Mercutio flirting with Rosaline.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
             ]
         }
     },
@@ -622,6 +688,18 @@ SCENES = {
             "choices": [
                 {"text": "Order Tybalt to stand down.", "next": "ball_capulet_orders"},
                 {"text": "Let it go (for now).", "next": "capulet_ball"}
+            ]
+        },
+        1: {
+            "text": "[TODO] Juliet reacts as Capulet intervenes.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
+        },
+        6: {
+            "text": "[TODO] The Nurse reacts as Capulet intervenes.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
             ]
         }
     },
@@ -656,6 +734,18 @@ SCENES = {
                 {"text": "Flee.", "next": "romeo_banished"},
                 {"text": "Draw your sword.", "next": "street_brawl"}
             ]
+        },
+        5: {
+            "text": "[TODO] Paris reacts to Romeo being exposed.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
+        },
+        7: {
+            "text": "[TODO] Capulet reacts to Romeo being exposed.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
         }
     },
 
@@ -667,6 +757,18 @@ SCENES = {
                 {"text": "Reveal yourself.", "next": "balcony_first_confession"},
                 {"text": "Listen longer (coward).", "next": "balcony_romeo_eavesdrops"},
                 {"text": "Leave (this is wrong).", "next": "romeo_solitary"}
+            ]
+        },
+        3: {
+            "text": "[TODO] Mercutio overhears the balcony scene.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
+            ]
+        },
+        7: {
+            "text": "[TODO] Capulet hears rumor of balcony whispers.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
             ]
         }
     },
@@ -733,6 +835,12 @@ SCENES = {
             "choices": [
                 {"text": "Say 'I do.'", "next": "END"},
                 {"text": "Flee (last chance).", "next": "convent_escape"}
+            ]
+        },
+        2: {
+            "text": "[TODO] Romeo at the secret marriage.",
+            "choices": [
+                {"text": "End for now.", "next": "END"}
             ]
         }
     },

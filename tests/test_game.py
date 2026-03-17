@@ -159,6 +159,7 @@ class TestGame(unittest.TestCase):
       player_character = PlayerCharacter(
         1,
         "Juliet",
+        "slot1",
         flags={"vowed": True},
         inventory=["letter"],
         relationships={"Romeo": 2},
@@ -179,6 +180,7 @@ class TestGame(unittest.TestCase):
       self.assertEqual(data["current_scene"], "juliet_intro")
       self.assertEqual(data["player"]["character_id"], 1)
       self.assertEqual(data["player"]["name"], "Juliet")
+      self.assertEqual(data["player"]["save_name"], "slot1")
       self.assertEqual(data["player"]["inventory"], ["letter"])
       self.assertEqual(data["player"]["relationships"]["Romeo"], 2)
 
@@ -204,6 +206,7 @@ class TestGame(unittest.TestCase):
         "player": {
           "character_id": 2,
           "name": "Romeo",
+          "save_name": "romeo_run",
           "flags": {"met_juliet": True},
           "inventory": ["mask"],
           "relationships": {"Juliet": 3},
@@ -222,6 +225,7 @@ class TestGame(unittest.TestCase):
       self.assertEqual(current_scene, "romeo_melancholy")
       self.assertEqual(player_character.character_id, 2)
       self.assertEqual(player_character.name, "Romeo")
+      self.assertEqual(player_character.save_name, "romeo_run")
       self.assertTrue(player_character.flags["met_juliet"])
       self.assertEqual(player_character.inventory, ["mask"])
       self.assertEqual(player_character.relationships["Juliet"], 3)
