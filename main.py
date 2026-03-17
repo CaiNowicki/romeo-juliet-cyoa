@@ -61,11 +61,7 @@ def load_game(input_func=input, output_func=print, save_dir="saves"):
     output_func("That save file is missing required data.")
     return None
   # Rebuild a PlayerCharacter so the rest of the engine can proceed normally.
-  player_character = PlayerCharacter(
-    data["player"]["character_id"],
-    data["player"]["name"],
-    data["player"].get("flags", {}),
-  )
+  player_character = PlayerCharacter.from_dict(data["player"])
   return player_character, data["current_scene"]
 
 
@@ -98,11 +94,7 @@ def save_game(player_character, current_scene, input_func=input, output_func=pri
   # Keep the schema small and explicit for teaching and debugging.
   data = {
     "current_scene": current_scene,
-    "player": {
-      "character_id": player_character.character_id,
-      "name": player_character.name,
-      "flags": player_character.flags,
-    },
+    "player": player_character.to_dict(),
   }
   save_file = save_path / filename
   try:
@@ -204,6 +196,8 @@ def main_gameplay_loop(scene_id, player_character, input_func=input, output_func
         # Save the game and exit immediately.
         save_game(player_character, scene_id, input_func, output_func)
         end_game(output_func)
+      # Store a running history of choices for replay/debugging.
+      player_character.record_choice(scene_id, player_choice)
       game_over_flag, scene_id = apply_choice(player_choice, scene_id, player_character)
     except KeyError:
       output_func("Sorry, that scene isn't written yet.")

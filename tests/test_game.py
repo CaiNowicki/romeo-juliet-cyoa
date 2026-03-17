@@ -156,7 +156,14 @@ class TestGame(unittest.TestCase):
     # Save to a temporary directory with a provided filename, then
     # assert the file contents match the expected schema.
     with tempfile.TemporaryDirectory() as temp_dir:
-      player_character = PlayerCharacter(1, "Juliet")
+      player_character = PlayerCharacter(
+        1,
+        "Juliet",
+        flags={"vowed": True},
+        inventory=["letter"],
+        relationships={"Romeo": 2},
+        decision_history=[("juliet_intro", 1)],
+      )
       save_file = main.save_game(
         player_character,
         "juliet_intro",
@@ -172,6 +179,8 @@ class TestGame(unittest.TestCase):
       self.assertEqual(data["current_scene"], "juliet_intro")
       self.assertEqual(data["player"]["character_id"], 1)
       self.assertEqual(data["player"]["name"], "Juliet")
+      self.assertEqual(data["player"]["inventory"], ["letter"])
+      self.assertEqual(data["player"]["relationships"]["Romeo"], 2)
 
   def test_save_game_cancelled_on_blank_name(self):
     # Blank filename should cancel the save and return None.
@@ -196,6 +205,9 @@ class TestGame(unittest.TestCase):
           "character_id": 2,
           "name": "Romeo",
           "flags": {"met_juliet": True},
+          "inventory": ["mask"],
+          "relationships": {"Juliet": 3},
+          "decision_history": [["romeo_melancholy", 1]],
         },
       }
       save_path = os.path.join(temp_dir, "slot1.json")
@@ -211,6 +223,9 @@ class TestGame(unittest.TestCase):
       self.assertEqual(player_character.character_id, 2)
       self.assertEqual(player_character.name, "Romeo")
       self.assertTrue(player_character.flags["met_juliet"])
+      self.assertEqual(player_character.inventory, ["mask"])
+      self.assertEqual(player_character.relationships["Juliet"], 3)
+      self.assertEqual(player_character.decision_history, [("romeo_melancholy", 1)])
 
   def test_load_game_no_saves(self):
     # Missing or empty saves directory should return None (no crash).
